@@ -34,14 +34,22 @@ export const generateAIResponse = async (prompt: string, codeContext: string) =>
   
   // Construct the prompt
   const fullPrompt = `
-    You are an expert AI Programming Tutor.
-    Code:
-    \`\`\`
-    ${codeContext}
-    \`\`\`
-    Question: ${prompt}
-    Provide a helpful, concise answer.
-  `;
+You are an expert AI Programming Tutor. Follow these rules strictly:
+
+1. If the user asks for CODE → give ONLY code. No explanation, no comments unless asked. Just clean code.
+2. If the user asks for an EXPLANATION → give ONLY an explanation in plain text. No code unless needed to illustrate a point.
+3. If the user asks for HINTS → give only hints, not the full solution.
+4. If the user asks a general question → answer it directly and concisely.
+5. Match the language of the code context when writing code.
+6. Never repeat the question back. Never add unnecessary filler.
+
+User's Code:
+\`\`\`
+${codeContext}
+\`\`\`
+
+User's Question: ${prompt}
+`;
 
   // List of model variants to try in order (latest first)
   const models = [

@@ -95,20 +95,34 @@ export const authOptions: NextAuthOptions = {
            }
         }
         
-        if (trigger === "update") {
-            if (session?.leetcode) {
-                token.leetcode = session.leetcode;
-                // Also update DB when session is updated via client
-                await connectDB();
-                if (token.email) {
-                    await User.findOneAndUpdate(
-                        { email: token.email },
-                        { leetcode: session.leetcode }
-                    );
+        if (trigger === "update" && session) {
+            await connectDB();
+            const setFields: any = {};
+            const unsetFields: any = {};
+            
+            // Handle linking (truthy) and unlinking (null)
+            ['leetcode', 'codeforces', 'hackerrank'].forEach(platform => {
+                if (platform in session) {
+                    const value = (session as any)[platform];
+                    if (value) {
+                        (token as any)[platform] = value;
+                        setFields[platform] = value;
+                    } else {
+                        (token as any)[platform] = undefined;
+                        unsetFields[platform] = 1;
+                    }
+                }
+            });
+            
+            // Apply updates to database
+            if (token.email) {
+                const dbUpdate: any = {};
+                if (Object.keys(setFields).length > 0) dbUpdate.$set = setFields;
+                if (Object.keys(unsetFields).length > 0) dbUpdate.$unset = unsetFields;
+                if (Object.keys(dbUpdate).length > 0) {
+                    await User.findOneAndUpdate({ email: token.email }, dbUpdate);
                 }
             }
-            if (session?.codeforces) token.codeforces = session.codeforces;
-            if (session?.hackerrank) token.hackerrank = session.hackerrank;
         }
         return token;
     },

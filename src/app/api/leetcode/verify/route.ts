@@ -1,90 +1,69 @@
-import { NextResponse } from 'next/server';
-import connectDB from '@/lib/db';
-import LeetCodeProfile from '@/models/LeetCodeProfile';
+import { NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
 export async function POST(req: Request) {
   try {
-    const { username } = await req.json();
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+    }
 
+    const { username } = await req.json()
     if (!username) {
-      return NextResponse.json({ error: 'Username is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Username required' }, { status: 400 })
     }
 
     const query = `
       query getUserProfile($username: String!) {
         matchedUser(username: $username) {
           username
-          profile {
-             userAvatar
-          }
-          submitStats: submitStatsGlobal {
+          submitStats {
             acSubmissionNum {
               difficulty
               count
-              submissions
             }
           }
-        }
-        recentAcSubmissionList(username: $username, limit: 3) {
-            title
-            titleSlug
-            timestamp
+          profile {
+            realName
+            ranking
+          }
         }
       }
-    `;
+    `
 
-    const response = await fetch('https://leetcode.com/graphql', {
+    const res = await fetch('https://leetcode.com/graphql', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Referer': 'https://leetcode.com',
-      },
-      body: JSON.stringify({
-        query,
-        variables: { username },
-      }),
-    });
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, variables: { username } }),
+    })
 
-    const data = await response.json();
+    const data = await res.json()
 
-    if (data.errors) {
-        return NextResponse.json({ error: 'LeetCode user not found or API error' }, { status: 404 });
+    if (!data.data?.matchedUser) {
+      return NextResponse.json({ error: 'LeetCode user not found' }, { status: 404 })
     }
 
-    if (!data.data.matchedUser) {
-        return NextResponse.json({ error: 'User does not exist on LeetCode' }, { status: 404 });
-    }
-    
-    const userData = data.data.matchedUser;
-    const recentSubmissions = data.data.recentAcSubmissionList;
+    const user = data.data.matchedUser
+    const submissions = user.submitStats.acSubmissionNum
+    const easy = submissions.find((s: any) => s.difficulty === 'Easy')?.count || 0
+    const medium = submissions.find((s: any) => s.difficulty === 'Medium')?.count || 0
+    const hard = submissions.find((s: any) => s.difficulty === 'Hard')?.count || 0
 
-    // Connect to DataBase and Store Data
-    await connectDB();
-    
-    await LeetCodeProfile.findOneAndUpdate(
-      { username: userData.username },
-      {
-        username: userData.username,
-        avatar: userData.profile?.userAvatar,
-        solvedStats: userData.submitStats.acSubmissionNum,
-        recentSubmissions: recentSubmissions,
-        lastUpdated: new Date()
-      },
-      { upsert: true, new: true }
-    );
-
-    return NextResponse.json({ 
-        success: true, 
-        data: {
-            username: userData.username,
-            avatar: userData.profile?.userAvatar,
-            submitStats: userData.submitStats,
-            recentSubmissions: recentSubmissions
-        } 
-    });
-
-  } catch (error: any) {
-    console.error("LeetCode Verify Error:", error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({
+      success: true,
+      data: {
+        username: user.username,
+        realName: user.profile?.realName,
+        ranking: user.profile?.ranking,
+        easy,
+        medium,
+        hard,
+        total: easy + medium + hard
+      }
+    })
+  } catch (e) {
+    console.error('LeetCode verify error:', e)
+    return NextResponse.json({ error: 'Failed to verify' }, { status: 500 })
   }
 }
