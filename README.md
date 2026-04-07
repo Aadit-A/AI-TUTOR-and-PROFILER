@@ -19,7 +19,35 @@ An AI-powered learning and skill profiling system with separate interfaces for s
    npm run dev
    ```
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+3. Configure Ollama (required for AI tutor responses):
+   ```bash
+   ollama serve
+   ollama pull qwen3.5
+   ```
+
+   Add these variables in `.env.local`:
+   ```env
+   OLLAMA_BASE_URL=http://127.0.0.1:11434
+   OLLAMA_MODEL=qwen3.5
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Every Time You Start Development
+
+1. Start Ollama in one terminal:
+   ```bash
+   ollama serve
+   ```
+2. Start the app in a second terminal:
+   ```bash
+   npm run dev
+   ```
+3. If AI answers fail, verify Ollama is running on `http://127.0.0.1:11434` and the model exists:
+   ```bash
+   ollama list
+   ollama pull qwen3.5
+   ```
 
 ## Project Structure
 

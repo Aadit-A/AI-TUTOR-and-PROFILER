@@ -1,9 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { useSession, signOut } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Code, Activity, BarChart2, Settings, LogOut, Award, Zap, Loader2, ExternalLink, List } from 'lucide-react'
+import { Code, Activity, Award, Zap, Loader2 } from 'lucide-react'
+import StudentSidebar from '@/components/student/StudentSidebar'
 
 export default function StudentDashboard() {
   const { data: session, status } = useSession()
@@ -12,7 +13,7 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true)
 
   const user = session?.user as any
-  const hasLinkedAccounts = user?.leetcode || user?.codeforces || user?.hackerrank
+  const hasLinkedAccounts = user?.leetcode
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login')
@@ -22,34 +23,21 @@ export default function StudentDashboard() {
     }
   }, [status, hasLinkedAccounts, router])
 
-  if (status === 'loading') return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">Loading...</div>
-  if (status === 'unauthenticated') return null
-
   return (
     <div className="flex h-screen bg-slate-950 text-slate-300">
-      {/* Sidebar */}
-      <aside className="w-56 border-r border-slate-800 flex flex-col">
-        <div className="p-4 border-b border-slate-800">
-          <div className="flex items-center gap-2 font-bold text-white">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"><Code size={16} /></div>
-            AI Tutor
-          </div>
-        </div>
-        <nav className="flex-1 p-3 space-y-1">
-          <NavItem href="/student/dashboard" icon={<Activity size={16} />} label="Overview" active />
-          <NavItem href="/student/problems" icon={<List size={16} />} label="Problems" />
-          <NavItem href="/student/practice" icon={<Code size={16} />} label="Practice Lab" />
-          <NavItem href="/student/profile" icon={<Settings size={16} />} label="Settings" />
-        </nav>
-        <div className="p-3 border-t border-slate-800">
-          <button onClick={() => signOut({ callbackUrl: '/login' })} className="w-full flex items-center gap-2 px-3 py-2 text-slate-400 hover:text-red-400 rounded-lg">
-            <LogOut size={16} /> Sign Out
-          </button>
-        </div>
-      </aside>
+      <StudentSidebar active="overview" />
 
       {/* Main */}
       <main className="flex-1 overflow-y-auto p-8">
+        {status === 'loading' ? (
+           <div className="h-full flex items-center justify-center text-slate-400"><Loader2 className="animate-spin mr-2" size={20} /> Loading dashboard...</div>
+        ) : status === 'unauthenticated' ? (
+           <div className="h-full flex flex-col items-center justify-center text-slate-400">
+              <p className="mb-4">Please log in to view your dashboard.</p>
+              <button onClick={() => router.push('/login')} className="px-4 py-2 bg-blue-600 rounded-lg text-white">Log In</button>
+           </div>
+        ) : (
+          <>
         <h1 className="text-2xl font-bold text-white mb-2">Welcome back, {session?.user?.name || 'Student'}</h1>
         <p className="text-slate-400 mb-8">Track your coding progress and improve your skills.</p>
 
@@ -75,8 +63,6 @@ export default function StudentDashboard() {
               <h3 className="font-bold text-white mb-4">Linked Accounts</h3>
               <div className="flex flex-wrap gap-3">
                 {user?.leetcode && <PlatformBadge name="LeetCode" username={user.leetcode} color="bg-yellow-500/10 text-yellow-500" />}
-                {user?.codeforces && <PlatformBadge name="Codeforces" username={user.codeforces} color="bg-blue-500/10 text-blue-500" />}
-                {user?.hackerrank && <PlatformBadge name="HackerRank" username={user.hackerrank} color="bg-green-500/10 text-green-500" />}
               </div>
             </div>
 
@@ -96,13 +82,11 @@ export default function StudentDashboard() {
             )}
           </>
         )}
+        </>
+      )}
       </main>
     </div>
   )
-}
-
-function NavItem({ href, icon, label, active }: { href: string; icon: React.ReactNode; label: string; active?: boolean }) {
-  return <Link href={href} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${active ? 'bg-blue-500/10 text-blue-400' : 'text-slate-400 hover:bg-slate-800'}`}>{icon} {label}</Link>
 }
 
 function StatCard({ label, value, color, icon }: { label: string; value: number; color: string; icon: React.ReactNode }) {

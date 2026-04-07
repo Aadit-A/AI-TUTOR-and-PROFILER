@@ -3,9 +3,9 @@ import { useState, useRef, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Editor from '@monaco-editor/react'
 import Link from 'next/link'
-import { signOut } from 'next-auth/react'
-import { Send, Play, Zap, Bot, User, Code, LogOut, Settings, Activity, BarChart2, ChevronDown, ExternalLink, ArrowLeft, Loader2, List } from 'lucide-react'
+import { Send, Play, Zap, Bot, ExternalLink, ArrowLeft, Loader2, List } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
+import StudentSidebar from '@/components/student/StudentSidebar'
 
 interface Problem {
   problemId: number
@@ -25,13 +25,7 @@ const DIFFICULTY_COLORS = {
   Hard: 'text-red-400 bg-red-400/10',
 }
 
-const LANGUAGES = {
-  cpp: { name: 'C++', monaco: 'cpp', template: '#include <iostream>\n\nint main() {\n    std::cout << "Hello, World!" << std::endl;\n    return 0;\n}' },
-  c: { name: 'C', monaco: 'c', template: '#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}' },
-  python: { name: 'Python', monaco: 'python', template: 'print("Hello, World!")' },
-  javascript: { name: 'JavaScript', monaco: 'javascript', template: 'console.log("Hello, World!");' },
-  java: { name: 'Java', monaco: 'java', template: 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}' },
-}
+const CPP_TEMPLATE = '#include <iostream>\n\nint main() {\n    std::cout << "Hello, World!" << std::endl;\n    return 0;\n}'
 
 function PracticeLabContent() {
   const searchParams = useSearchParams()
@@ -39,8 +33,7 @@ function PracticeLabContent() {
   
   const [problem, setProblem] = useState<Problem | null>(null)
   const [problemLoading, setProblemLoading] = useState(false)
-  const [language, setLanguage] = useState<keyof typeof LANGUAGES>('cpp')
-  const [code, setCode] = useState(LANGUAGES.cpp.template)
+  const [code, setCode] = useState(CPP_TEMPLATE)
   const [output, setOutput] = useState('')
   const [chat, setChat] = useState<{role: 'user' | 'ai', text: string}[]>([])
   const [chatInput, setChatInput] = useState('')
@@ -56,9 +49,8 @@ function PracticeLabContent() {
         .then(data => {
           if (!data.error) {
             setProblem(data)
-            // Load starter code for the current language if available
-            if (data.starterCode?.[language]) {
-              setCode(data.starterCode[language])
+            if (data.starterCode?.cpp) {
+              setCode(data.starterCode.cpp)
             }
           }
         })
@@ -69,20 +61,10 @@ function PracticeLabContent() {
 
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [chat])
 
-  const changeLanguage = (lang: keyof typeof LANGUAGES) => {
-    setLanguage(lang)
-    // Use problem starter code if available, else default template
-    if (problem?.starterCode?.[lang]) {
-      setCode(problem.starterCode[lang])
-    } else {
-      setCode(LANGUAGES[lang].template)
-    }
-  }
-
   const runCode = async () => {
     setLoading(true); setOutput('Compiling...')
     try {
-      const res = await fetch('/api/execute', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code, language }) })
+      const res = await fetch('/api/execute', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code }) })
       const data = await res.json()
       setOutput(data.output || data.error || 'No output')
     } catch { setOutput('Execution failed') }
@@ -92,36 +74,26 @@ function PracticeLabContent() {
   const askAI = async () => {
     if (!chatInput.trim()) return
     const msg = chatInput; setChatInput(''); setChat(p => [...p, { role: 'user', text: msg }]); setAiLoading(true)
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 60000)
     try {
-      const res = await fetch('/api/ai-tutor', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: msg, code }) })
+      const res = await fetch('/api/ai-tutor', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: msg, code }), signal: controller.signal })
+      if (!res.ok) throw new Error('Request failed')
       const data = await res.json()
-      setChat(p => [...p, { role: 'ai', text: data.message }])
-    } catch { setChat(p => [...p, { role: 'ai', text: 'Failed to connect' }]) }
-    setAiLoading(false)
+      const reply = typeof data?.message === 'string' && data.message.trim() ? data.message : 'No response from AI'
+      setChat(p => [...p, { role: 'ai', text: reply }])
+    } catch (error) {
+      const text = error instanceof Error && error.name === 'AbortError' ? 'AI request timed out. Try again.' : 'Failed to connect'
+      setChat(p => [...p, { role: 'ai', text }])
+    } finally {
+      clearTimeout(timeoutId)
+      setAiLoading(false)
+    }
   }
 
   return (
     <div className="flex h-screen bg-slate-950 text-slate-300">
-      {/* Sidebar */}
-      <aside className="w-56 border-r border-slate-800 flex flex-col">
-        <div className="p-4 border-b border-slate-800">
-          <Link href="/student/dashboard" className="flex items-center gap-2 font-bold text-white">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"><Code size={16} /></div>
-            AI Tutor
-          </Link>
-        </div>
-        <nav className="flex-1 p-3 space-y-1">
-          <NavItem href="/student/dashboard" icon={<Activity size={16} />} label="Overview" />
-          <NavItem href="/student/problems" icon={<List size={16} />} label="Problems" />
-          <NavItem href="/student/practice" icon={<Code size={16} />} label="Practice Lab" active />
-          <NavItem href="/student/profile" icon={<Settings size={16} />} label="Settings" />
-        </nav>
-        <div className="p-3 border-t border-slate-800">
-          <button onClick={() => signOut({ callbackUrl: '/login' })} className="w-full flex items-center gap-2 px-3 py-2 text-slate-400 hover:text-red-400 rounded-lg">
-            <LogOut size={16} /> Sign Out
-          </button>
-        </div>
-      </aside>
+      <StudentSidebar active="practice" />
 
       {/* Editor */}
       <div className="flex-1 flex flex-col">
@@ -152,18 +124,7 @@ function PracticeLabContent() {
             <Link href="/student/problems" className="px-3 py-2 text-sm text-slate-400 hover:text-white flex items-center gap-2">
               <List size={14} /> Problems
             </Link>
-            <div className="relative">
-              <select 
-                value={language} 
-                onChange={(e) => changeLanguage(e.target.value as keyof typeof LANGUAGES)}
-                className="appearance-none bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 pr-8 text-sm font-medium cursor-pointer hover:bg-slate-700 focus:outline-none focus:border-blue-500"
-              >
-                {Object.entries(LANGUAGES).map(([key, val]) => (
-                  <option key={key} value={key}>{val.name}</option>
-                ))}
-              </select>
-              <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
-            </div>
+            <span className="px-3 py-2 text-sm font-medium rounded-lg border border-slate-700 bg-slate-800 text-slate-200">C++</span>
             <button onClick={runCode} disabled={loading} className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-medium flex items-center gap-2 disabled:opacity-50">
               <Play size={14} /> {loading ? 'Running...' : 'Run Code'}
             </button>
@@ -211,7 +172,7 @@ function PracticeLabContent() {
             </div>
           )}
           <div className="flex-1 flex flex-col">
-            <Editor height="60%" language={LANGUAGES[language].monaco} theme="vs-dark" value={code} onChange={(v) => setCode(v || '')} options={{ minimap: { enabled: false }, fontSize: 14 }} />
+            <Editor height="60%" language="cpp" theme="vs-dark" value={code} onChange={(v) => setCode(v || '')} options={{ minimap: { enabled: false }, fontSize: 14 }} />
             <div className="h-[40%] bg-slate-900 border-t border-slate-800 p-4 overflow-auto">
               <div className="flex items-center gap-2 text-green-400 text-sm mb-2"><Zap size={14} /> Output</div>
               <pre className="text-sm font-mono whitespace-pre-wrap">{output || 'Run your code to see output'}</pre>
@@ -267,14 +228,6 @@ function PracticeLabContent() {
         </div>
       </div>
     </div>
-  )
-}
-
-function NavItem({ href, icon, label, active }: { href: string; icon: React.ReactNode; label: string; active?: boolean }) {
-  return (
-    <Link href={href} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${active ? 'bg-blue-500/10 text-blue-400' : 'text-slate-400 hover:bg-slate-800'}`}>
-      {icon} {label}
-    </Link>
   )
 }
 

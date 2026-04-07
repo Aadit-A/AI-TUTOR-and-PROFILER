@@ -39,7 +39,7 @@ export default function LandingPage() {
           </motion.h1>
           
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-xl text-slate-400 mb-10 max-w-2xl mx-auto">
-            Practice coding, get instant AI feedback, and track your progress across LeetCode, Codeforces, and HackerRank.
+            Practice coding, get instant AI feedback, and track your progress on LeetCode.
           </motion.p>
           
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -60,7 +60,7 @@ export default function LandingPage() {
             {[
               { icon: Code, title: 'Built-in IDE', desc: 'Write, compile, and test code with our powerful integrated editor' },
               { icon: Zap, title: 'AI Tutor Chat', desc: 'Get instant help and explanations from our AI assistant' },
-              { icon: Shield, title: 'Platform Sync', desc: 'Connect LeetCode, Codeforces, and HackerRank accounts' },
+              { icon: Shield, title: 'Platform Sync', desc: 'Connect your LeetCode account' },
             ].map((f, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 hover:border-blue-500/50 transition-colors">
                 <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-6"><f.icon className="text-blue-400" size={24} /></div>

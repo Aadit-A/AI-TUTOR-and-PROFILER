@@ -1,11 +1,10 @@
 'use client'
 import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Code, Users, Search, Building, LogOut } from 'lucide-react'
+import { Users, Search, Building, LogOut } from 'lucide-react'
 
 export default function CompanyDashboard() {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const router = useRouter()
 
   if (status === 'loading') return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">Loading...</div>

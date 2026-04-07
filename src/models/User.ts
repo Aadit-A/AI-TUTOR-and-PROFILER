@@ -6,8 +6,7 @@ export interface IUser extends Document {
   password?: string;
   role: 'student' | 'company' | 'admin';
   leetcode?: string;
-  codeforces?: string;
-  hackerrank?: string;
+  googleId?: string;
   createdAt: Date;
 }
 
@@ -17,8 +16,7 @@ const UserSchema: Schema = new Schema({
   password: { type: String }, // Optional for Google Auth, but used for Credentials
   role: { type: String, enum: ['student', 'company', 'admin'], default: 'student' },
   leetcode: { type: String },
-  codeforces: { type: String },
-  hackerrank: { type: String },
+  googleId: { type: String },
   createdAt: { type: Date, default: Date.now }
 });
 
