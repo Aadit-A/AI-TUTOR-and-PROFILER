@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Code, Activity, Award, Zap, Loader2 } from 'lucide-react'
+import { motion } from 'framer-motion'
 import StudentSidebar from '@/components/student/StudentSidebar'
 
 export default function StudentDashboard() {
@@ -24,61 +25,61 @@ export default function StudentDashboard() {
   }, [status, hasLinkedAccounts, router])
 
   return (
-    <div className="flex h-screen bg-slate-950 text-slate-300">
+    <div className="flex h-screen bg-[#f3f6f4] text-[#233337]">
       <StudentSidebar active="overview" />
 
       {/* Main */}
       <main className="flex-1 overflow-y-auto p-8">
         {status === 'loading' ? (
-           <div className="h-full flex items-center justify-center text-slate-400"><Loader2 className="animate-spin mr-2" size={20} /> Loading dashboard...</div>
+           <div className="h-full flex items-center justify-center text-[#5a7275]"><Loader2 className="mr-2 animate-spin" size={20} /> Loading dashboard...</div>
         ) : status === 'unauthenticated' ? (
-           <div className="h-full flex flex-col items-center justify-center text-slate-400">
+           <div className="h-full flex flex-col items-center justify-center text-[#5a7275]">
               <p className="mb-4">Please log in to view your dashboard.</p>
-              <button onClick={() => router.push('/login')} className="px-4 py-2 bg-blue-600 rounded-lg text-white">Log In</button>
+              <button onClick={() => router.push('/login')} className="rounded-lg bg-teal-700 px-4 py-2 text-white">Log In</button>
            </div>
         ) : (
           <>
-        <h1 className="text-2xl font-bold text-white mb-2">Welcome back, {session?.user?.name || 'Student'}</h1>
-        <p className="text-slate-400 mb-8">Track your coding progress and improve your skills.</p>
+        <h1 className="mb-2 text-2xl font-bold text-[#18292c]">Welcome back, {session?.user?.name || 'Student'}</h1>
+        <p className="mb-8 text-[#5a7275]">Track your coding progress and improve your skills.</p>
 
         {loading ? (
-          <div className="flex items-center gap-2 text-slate-400"><Loader2 className="animate-spin" size={20} /> Loading stats...</div>
+          <div className="flex items-center gap-2 text-[#5a7275]"><Loader2 className="animate-spin" size={20} /> Loading stats...</div>
         ) : !hasLinkedAccounts ? (
-          <div className="bg-slate-900 rounded-xl p-6 border border-slate-800">
-            <p className="text-slate-400 mb-4">Link your coding accounts to see your stats.</p>
-            <Link href="/student/profile" className="text-blue-400 hover:underline">Go to Settings →</Link>
+          <div className="rounded-xl border border-[#d6e2de] bg-white p-6">
+            <p className="mb-4 text-[#5a7275]">Link your coding accounts to see your stats.</p>
+            <Link href="/student/profile" className="text-teal-700 hover:underline">Go to Settings →</Link>
           </div>
         ) : (
           <>
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-              <StatCard label="Easy" value={stats?.easy || 0} color="text-green-400" icon={<Zap size={18} />} />
-              <StatCard label="Medium" value={stats?.medium || 0} color="text-yellow-400" icon={<Activity size={18} />} />
-              <StatCard label="Hard" value={stats?.hard || 0} color="text-red-400" icon={<Award size={18} />} />
-              <StatCard label="Total Solved" value={stats?.total || 0} color="text-purple-400" icon={<Code size={18} />} />
+            <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
+              <StatCard label="Easy" value={stats?.easy || 0} color="text-green-600" icon={<Zap size={18} />} delay={0.02} />
+              <StatCard label="Medium" value={stats?.medium || 0} color="text-amber-600" icon={<Activity size={18} />} delay={0.06} />
+              <StatCard label="Hard" value={stats?.hard || 0} color="text-rose-600" icon={<Award size={18} />} delay={0.1} />
+              <StatCard label="Total Solved" value={stats?.total || 0} color="text-teal-700" icon={<Code size={18} />} delay={0.14} />
             </div>
 
             {/* Linked Platforms */}
-            <div className="bg-slate-900 rounded-xl p-6 border border-slate-800 mb-6">
-              <h3 className="font-bold text-white mb-4">Linked Accounts</h3>
+            <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.3 }} className="mb-6 rounded-xl border border-[#d6e2de] bg-white p-6">
+              <h3 className="mb-4 font-bold text-[#18292c]">Linked Accounts</h3>
               <div className="flex flex-wrap gap-3">
-                {user?.leetcode && <PlatformBadge name="LeetCode" username={user.leetcode} color="bg-yellow-500/10 text-yellow-500" />}
+                {user?.leetcode && <PlatformBadge name="LeetCode" username={user.leetcode} color="border border-amber-200 bg-amber-50 text-amber-700" />}
               </div>
-            </div>
+            </motion.div>
 
             {/* Recent Submissions */}
             {stats?.recentSubmissions?.length > 0 && (
-              <div className="bg-slate-900 rounded-xl p-6 border border-slate-800">
-                <h3 className="font-bold text-white mb-4">Recent Submissions</h3>
+              <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.3, delay: 0.06 }} className="rounded-xl border border-[#d6e2de] bg-white p-6">
+                <h3 className="mb-4 font-bold text-[#18292c]">Recent Submissions</h3>
                 <div className="space-y-2">
                   {stats.recentSubmissions.slice(0, 5).map((s: any, i: number) => (
-                    <div key={i} className="flex justify-between items-center py-2 border-b border-slate-800 last:border-0">
+                    <div key={i} className="flex items-center justify-between border-b border-[#e2ece9] py-2 last:border-0">
                       <span className="text-sm">{s.title}</span>
-                      <span className={`text-xs ${s.statusDisplay === 'Accepted' ? 'text-green-400' : 'text-red-400'}`}>{s.statusDisplay}</span>
+                      <span className={`text-xs ${s.statusDisplay === 'Accepted' ? 'text-green-600' : 'text-rose-600'}`}>{s.statusDisplay}</span>
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             )}
           </>
         )}
@@ -89,13 +90,13 @@ export default function StudentDashboard() {
   )
 }
 
-function StatCard({ label, value, color, icon }: { label: string; value: number; color: string; icon: React.ReactNode }) {
+function StatCard({ label, value, color, icon, delay }: { label: string; value: number; color: string; icon: React.ReactNode; delay: number }) {
   return (
-    <div className="bg-slate-900 rounded-xl p-5 border border-slate-800">
+    <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.28, delay }} className="rounded-xl border border-[#d6e2de] bg-white p-5">
       <div className={`${color} mb-2`}>{icon}</div>
-      <div className="text-2xl font-bold text-white">{value}</div>
-      <div className="text-sm text-slate-400">{label}</div>
-    </div>
+      <div className="text-2xl font-bold text-[#18292c]">{value}</div>
+      <div className="text-sm text-[#5a7275]">{label}</div>
+    </motion.div>
   )
 }
 

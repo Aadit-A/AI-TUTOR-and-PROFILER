@@ -20,9 +20,9 @@ interface Problem {
 }
 
 const DIFFICULTY_COLORS = {
-  Easy: 'text-green-400 bg-green-400/10',
-  Medium: 'text-yellow-400 bg-yellow-400/10',
-  Hard: 'text-red-400 bg-red-400/10',
+  Easy: 'bg-green-50 text-green-700',
+  Medium: 'bg-amber-50 text-amber-700',
+  Hard: 'bg-rose-50 text-rose-700',
 }
 
 const CPP_TEMPLATE = '#include <iostream>\n\nint main() {\n    std::cout << "Hello, World!" << std::endl;\n    return 0;\n}'
@@ -92,19 +92,19 @@ function PracticeLabContent() {
   }
 
   return (
-    <div className="flex h-screen bg-slate-950 text-slate-300">
+    <div className="flex h-screen bg-[#f3f6f4] text-[#233337]">
       <StudentSidebar active="practice" />
 
       {/* Editor */}
       <div className="flex-1 flex flex-col">
-        <div className="flex items-center justify-between p-3 border-b border-slate-800">
+        <div className="flex items-center justify-between border-b border-[#d7e2de] bg-[#f6faf8] p-3">
           <div className="flex items-center gap-3">
             {problem && (
-              <Link href="/student/problems" className="p-2 hover:bg-slate-800 rounded-lg text-slate-400">
+              <Link href="/student/problems" className="rounded-lg p-2 text-[#5a7275] hover:bg-[#e7efec]">
                 <ArrowLeft size={16} />
               </Link>
             )}
-            <h2 className="font-bold text-white">
+            <h2 className="font-bold text-[#18292c]">
               {problem ? `${problem.problemId}. ${problem.title}` : 'Practice Lab'}
             </h2>
             {problem && (
@@ -113,7 +113,7 @@ function PracticeLabContent() {
                   {problem.difficulty}
                 </span>
                 {problem.url && (
-                  <a href={problem.url} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-blue-400">
+                  <a href={problem.url} target="_blank" rel="noopener noreferrer" className="text-[#5a7275] hover:text-teal-700">
                     <ExternalLink size={14} />
                   </a>
                 )}
@@ -121,11 +121,11 @@ function PracticeLabContent() {
             )}
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/student/problems" className="px-3 py-2 text-sm text-slate-400 hover:text-white flex items-center gap-2">
+            <Link href="/student/problems" className="flex items-center gap-2 px-3 py-2 text-sm text-[#5a7275] hover:text-[#18292c]">
               <List size={14} /> Problems
             </Link>
-            <span className="px-3 py-2 text-sm font-medium rounded-lg border border-slate-700 bg-slate-800 text-slate-200">C++</span>
-            <button onClick={runCode} disabled={loading} className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-medium flex items-center gap-2 disabled:opacity-50">
+            <span className="rounded-lg border border-[#cedbd7] bg-white px-3 py-2 text-sm font-medium text-[#334b4e]">C++</span>
+            <button onClick={runCode} disabled={loading} className="flex items-center gap-2 rounded-lg bg-teal-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600 disabled:opacity-50">
               <Play size={14} /> {loading ? 'Running...' : 'Run Code'}
             </button>
           </div>
@@ -133,33 +133,33 @@ function PracticeLabContent() {
         <div className="flex-1 flex">
           {/* Problem Description Panel */}
           {problem && (
-            <div className="w-96 border-r border-slate-800 flex flex-col overflow-hidden">
-              <div className="p-4 border-b border-slate-800">
+            <div className="flex w-96 flex-col overflow-hidden border-r border-[#d7e2de] bg-white">
+              <div className="border-b border-[#e1ebe8] p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-slate-400">Acceptance: {problem.acceptanceRate?.toFixed(1)}%</span>
+                  <span className="text-sm text-[#5a7275]">Acceptance: {problem.acceptanceRate?.toFixed(1)}%</span>
                 </div>
                 {problem.relatedTopics.length > 0 && (
                   <div className="flex flex-wrap gap-1">
                     {problem.relatedTopics.map(topic => (
-                      <span key={topic} className="px-2 py-0.5 text-xs bg-slate-800 rounded-full text-slate-400">{topic}</span>
+                      <span key={topic} className="rounded-full bg-[#edf3f1] px-2 py-0.5 text-xs text-[#597173]">{topic}</span>
                     ))}
                   </div>
                 )}
               </div>
               <div className="flex-1 overflow-auto p-4">
-                <div className="prose prose-invert prose-sm max-w-none">
+                <div className="prose prose-sm max-w-none prose-headings:text-[#18292c] prose-p:text-[#314649]">
                   <div className="text-sm whitespace-pre-wrap">{problem.description}</div>
                 </div>
               </div>
               {problem.companies.length > 0 && (
-                <div className="p-4 border-t border-slate-800">
-                  <div className="text-xs text-slate-500 mb-2">Companies</div>
+                <div className="border-t border-[#e1ebe8] p-4">
+                  <div className="mb-2 text-xs text-[#728688]">Companies</div>
                   <div className="flex flex-wrap gap-1">
                     {problem.companies.slice(0, 10).map(company => (
-                      <span key={company} className="px-2 py-0.5 text-xs bg-purple-500/10 text-purple-400 rounded">{company}</span>
+                      <span key={company} className="rounded bg-teal-50 px-2 py-0.5 text-xs text-teal-700">{company}</span>
                     ))}
                     {problem.companies.length > 10 && (
-                      <span className="px-2 py-0.5 text-xs text-slate-500">+{problem.companies.length - 10} more</span>
+                      <span className="px-2 py-0.5 text-xs text-[#728688]">+{problem.companies.length - 10} more</span>
                     )}
                   </div>
                 </div>
@@ -167,14 +167,14 @@ function PracticeLabContent() {
             </div>
           )}
           {problemLoading && (
-            <div className="w-96 border-r border-slate-800 flex items-center justify-center">
-              <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+            <div className="flex w-96 items-center justify-center border-r border-[#d7e2de] bg-white">
+              <Loader2 className="h-6 w-6 animate-spin text-teal-700" />
             </div>
           )}
           <div className="flex-1 flex flex-col">
             <Editor height="60%" language="cpp" theme="vs-dark" value={code} onChange={(v) => setCode(v || '')} options={{ minimap: { enabled: false }, fontSize: 14 }} />
-            <div className="h-[40%] bg-slate-900 border-t border-slate-800 p-4 overflow-auto">
-              <div className="flex items-center gap-2 text-green-400 text-sm mb-2"><Zap size={14} /> Output</div>
+            <div className="h-[40%] overflow-auto border-t border-[#d7e2de] bg-white p-4">
+              <div className="mb-2 flex items-center gap-2 text-sm text-teal-700"><Zap size={14} /> Output</div>
               <pre className="text-sm font-mono whitespace-pre-wrap">{output || 'Run your code to see output'}</pre>
             </div>
           </div>
@@ -182,25 +182,25 @@ function PracticeLabContent() {
       </div>
 
       {/* AI Chat */}
-      <div className="w-80 border-l border-slate-800 flex flex-col">
-        <div className="p-4 border-b border-slate-800 flex items-center gap-2">
-          <Bot size={18} className="text-blue-400" /><span className="font-bold text-white">AI Tutor</span>
+      <div className="flex w-80 flex-col border-l border-[#d7e2de] bg-white">
+        <div className="flex items-center gap-2 border-b border-[#e1ebe8] p-4">
+          <Bot size={18} className="text-teal-700" /><span className="font-bold text-[#18292c]">AI Tutor</span>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {chat.length === 0 && <p className="text-slate-500 text-sm text-center mt-8">Ask me anything about your code!</p>}
+          {chat.length === 0 && <p className="mt-8 text-center text-sm text-[#728688]">Ask me anything about your code!</p>}
           {chat.map((m, i) => (
             <div key={i} className={`flex gap-2 ${m.role === 'user' ? 'justify-end' : ''}`}>
-              {m.role === 'ai' && <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center"><Bot size={12} className="text-blue-400" /></div>}
-              <div className={`max-w-[80%] p-3 rounded-lg text-sm ${m.role === 'user' ? 'bg-blue-600 text-white' : 'bg-slate-800'}`}>
+              {m.role === 'ai' && <div className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-100"><Bot size={12} className="text-teal-700" /></div>}
+              <div className={`max-w-[80%] rounded-lg p-3 text-sm ${m.role === 'user' ? 'bg-teal-700 text-white' : 'border border-[#d6e2de] bg-[#f5f9f8] text-[#233337]'}`}>
                 {m.role === 'ai' ? (
                   <ReactMarkdown
                     components={{
                       code: ({ children, className }) => {
                         const isBlock = className?.includes('language-')
                         return isBlock ? (
-                          <pre className="bg-slate-900 rounded-md p-3 my-2 overflow-x-auto"><code className="text-xs font-mono text-green-400">{children}</code></pre>
+                          <pre className="my-2 overflow-x-auto rounded-md bg-[#eaf2ef] p-3"><code className="text-xs font-mono text-teal-800">{children}</code></pre>
                         ) : (
-                          <code className="bg-slate-900 px-1.5 py-0.5 rounded text-xs font-mono text-green-400">{children}</code>
+                          <code className="rounded bg-[#eaf2ef] px-1.5 py-0.5 text-xs font-mono text-teal-800">{children}</code>
                         )
                       },
                       pre: ({ children }) => <>{children}</>,
@@ -210,20 +210,20 @@ function PracticeLabContent() {
                       h1: ({ children }) => <h1 className="text-base font-bold mb-1">{children}</h1>,
                       h2: ({ children }) => <h2 className="text-sm font-bold mb-1">{children}</h2>,
                       h3: ({ children }) => <h3 className="text-sm font-semibold mb-1">{children}</h3>,
-                      strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                      strong: ({ children }) => <strong className="font-semibold text-[#18292c]">{children}</strong>,
                     }}
                   >{m.text}</ReactMarkdown>
                 ) : m.text}
               </div>
             </div>
           ))}
-          {aiLoading && <div className="flex gap-2"><div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center"><Bot size={12} className="text-blue-400" /></div><div className="bg-slate-800 p-3 rounded-lg text-sm">Thinking...</div></div>}
+          {aiLoading && <div className="flex gap-2"><div className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-100"><Bot size={12} className="text-teal-700" /></div><div className="rounded-lg border border-[#d6e2de] bg-[#f5f9f8] p-3 text-sm text-[#233337]">Thinking...</div></div>}
           <div ref={chatEndRef} />
         </div>
-        <div className="p-4 border-t border-slate-800">
+        <div className="border-t border-[#e1ebe8] p-4">
           <div className="flex gap-2">
-            <input value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && askAI()} placeholder="Ask a question..." className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none" />
-            <button onClick={askAI} disabled={aiLoading} className="p-2 bg-blue-600 hover:bg-blue-500 rounded-lg disabled:opacity-50"><Send size={16} /></button>
+            <input value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && askAI()} placeholder="Ask a question..." className="flex-1 rounded-lg border border-[#cfdcd8] bg-white px-3 py-2 text-sm text-[#18292c] outline-none focus:border-teal-600" />
+            <button onClick={askAI} disabled={aiLoading} className="rounded-lg bg-teal-700 p-2 text-white transition-colors hover:bg-teal-600 disabled:opacity-50"><Send size={16} /></button>
           </div>
         </div>
       </div>
@@ -233,7 +233,7 @@ function PracticeLabContent() {
 
 export default function PracticeLab() {
   return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center bg-slate-950 text-white"><Loader2 className="animate-spin" /></div>}>
+    <Suspense fallback={<div className="flex h-screen items-center justify-center bg-[#f3f6f4] text-[#18292c]"><Loader2 className="animate-spin" /></div>}>
       <PracticeLabContent />
     </Suspense>
   )

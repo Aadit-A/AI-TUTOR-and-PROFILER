@@ -2,10 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dark scrollbar */
+:root {
+  --bg: #f3f6f4;
+  --panel: #ffffff;
+  --ink: #18292c;
+  --muted: #5a7275;
+  --teal: #0f766e;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
 * {
   scrollbar-width: thin;
-  scrollbar-color: #334155 transparent;
+  scrollbar-color: #7ea6a3 transparent;
 }
 *::-webkit-scrollbar {
   width: 6px;
@@ -15,9 +28,9 @@
   background: transparent;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: #334155;
+  background-color: #7ea6a3;
   border-radius: 3px;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #475569;
+  background-color: #5f8f8b;
 }

@@ -13,18 +13,18 @@ type GoogleAccountCardProps = {
 export default function GoogleAccountCard({ googleConnected, onRefresh }: GoogleAccountCardProps) {
   return (
     <div className="mb-6">
-      <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+      <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-[#18292c]">
         <Lock size={18} /> Account Security
       </h3>
-      <div className="bg-slate-900 rounded-xl border border-slate-800 divide-y divide-slate-800">
-        <div className="p-5 flex items-center justify-between">
+      <div className="divide-y divide-[#dce8e4] rounded-xl border border-[#d6e2de] bg-white">
+        <div className="flex items-center justify-between p-5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center">
-              <span className="text-sm font-bold text-slate-900">G</span>
+            <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d2dfdb] bg-[#f5f8f7]">
+              <span className="text-sm font-bold text-[#18292c]">G</span>
             </div>
             <div>
-              <div className="font-medium text-white">Google Account</div>
-              <div className="text-sm text-slate-400">{googleConnected ? 'Connected' : 'Not connected'}</div>
+              <div className="font-medium text-[#18292c]">Google Account</div>
+              <div className="text-sm text-[#5a7275]">{googleConnected ? 'Connected' : 'Not connected'}</div>
             </div>
           </div>
 
@@ -33,7 +33,7 @@ export default function GoogleAccountCard({ googleConnected, onRefresh }: Google
           ) : (
             <button
               onClick={() => signIn('google', { callbackUrl: '/student/profile' })}
-              className="text-sm bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded transition-colors"
+              className="rounded bg-teal-700 px-3 py-1.5 text-sm text-white transition-colors hover:bg-teal-600"
             >
               Connect Google
             </button>
@@ -75,7 +75,7 @@ function UnlinkGoogleButton({ onUnlink }: { onUnlink: () => Promise<void> }) {
     <button
       onClick={handleClick}
       disabled={loading}
-      className="text-sm text-red-400 hover:bg-red-500/10 px-3 py-1.5 rounded transition-colors border border-red-500/20"
+      className="rounded border border-red-300 px-3 py-1.5 text-sm text-red-600 transition-colors hover:bg-red-50"
     >
       {loading ? 'Unlinking...' : 'Unlink'}
     </button>

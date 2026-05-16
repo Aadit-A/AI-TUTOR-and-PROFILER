@@ -4,7 +4,7 @@ import './globals.css'
 
 import AuthProvider from '@/components/providers/SessionProvider'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'AI Tutor',
@@ -17,8 +17,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="bg-slate-950">
-      <body className={`${inter.className} bg-slate-950 min-h-screen`}>
+    <html lang="en" className="bg-[#f3f6f4] text-[#18292c]">
+      <body className={`${inter.className} min-h-screen bg-[#f3f6f4] text-[#18292c]`}>
         <AuthProvider>
           {children}
         </AuthProvider>

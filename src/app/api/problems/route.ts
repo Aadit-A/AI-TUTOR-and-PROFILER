@@ -17,7 +17,6 @@ export async function GET(request: NextRequest) {
     const difficulty = searchParams.get('difficulty');
     const faang = searchParams.get('faang');
     const search = searchParams.get('search');
-    const company = searchParams.get('company');
     const topic = searchParams.get('topic');
     const sortBy = searchParams.get('sortBy') || 'problemId';
     const sortOrder = searchParams.get('sortOrder') === 'desc' ? -1 : 1;
@@ -31,10 +30,6 @@ export async function GET(request: NextRequest) {
     
     if (faang === 'true') {
       query.askedByFaang = true;
-    }
-    
-    if (company) {
-      query.companies = { $regex: company, $options: 'i' };
     }
     
     if (topic) {

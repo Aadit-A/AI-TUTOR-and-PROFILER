@@ -22,10 +22,10 @@ const navItems: NavItem[] = [
 
 export default function StudentSidebar({ active }: { active: ActiveTab }) {
   return (
-    <aside className="w-56 border-r border-slate-800 flex flex-col">
-      <div className="p-4 border-b border-slate-800">
-        <Link href="/student/dashboard" className="flex items-center gap-2 font-bold text-white">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+    <aside className="flex w-56 flex-col border-r border-[#d8e3df] bg-[#eef4f2]">
+      <div className="border-b border-[#d8e3df] p-4">
+        <Link href="/student/dashboard" className="flex items-center gap-2 font-bold text-[#18292c]">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-teal-600 to-cyan-600 text-white">
             <Code size={16} />
           </div>
           AI Tutor
@@ -39,7 +39,7 @@ export default function StudentSidebar({ active }: { active: ActiveTab }) {
               key={item.key}
               href={item.href}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
-                active === item.key ? 'bg-blue-500/10 text-blue-400' : 'text-slate-400 hover:bg-slate-800'
+                active === item.key ? 'bg-teal-700/10 text-teal-800' : 'text-[#5a7275] hover:bg-[#dfe9e5]'
               }`}
             >
               <Icon size={16} /> {item.label}
@@ -47,10 +47,10 @@ export default function StudentSidebar({ active }: { active: ActiveTab }) {
           )
         })}
       </nav>
-      <div className="p-3 border-t border-slate-800">
+      <div className="border-t border-[#d8e3df] p-3">
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
-          className="w-full flex items-center gap-2 px-3 py-2 text-slate-400 hover:text-red-400 rounded-lg"
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[#5a7275] transition-colors hover:text-red-500"
         >
           <LogOut size={16} /> Sign Out
         </button>

@@ -1,11 +1,10 @@
 # AI Tutor
 
-An AI-powered learning and skill profiling system with separate interfaces for students and companies.
+An AI-powered learning and skill profiling system.
 
 ## Features
 
 - **Student Side**: Code practice with AI analysis, guided teaching, and dynamic skill profiling
-- **Company Side**: Capability viewer with explainable scoring based on student performance data
 
 ## Getting Started
 

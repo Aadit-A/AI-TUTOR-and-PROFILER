@@ -78,20 +78,20 @@ export default function PlatformCard({
 
   if (connected) {
     return (
-      <div className="bg-slate-900 rounded-xl p-5 border border-slate-800">
+      <div className="rounded-xl border border-[#d6e2de] bg-white p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Code size={20} className={color} />
-            <span className="font-medium text-white">{name}</span>
+            <span className="font-medium text-[#18292c]">{name}</span>
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-green-400 text-sm">
+            <div className="flex items-center gap-2 text-sm text-green-600">
               <CheckCircle size={14} /> {connected}
             </div>
             <button
               onClick={unlink}
               disabled={unlinking}
-              className="text-xs text-slate-500 hover:text-red-400 transition-colors disabled:opacity-50"
+              className="text-xs text-[#6f8587] transition-colors hover:text-red-600 disabled:opacity-50"
             >
               {unlinking ? 'Unlinking...' : 'Unlink'}
             </button>
@@ -107,10 +107,10 @@ export default function PlatformCard({
   }
 
   return (
-    <div className="bg-slate-900 rounded-xl p-5 border border-slate-800">
+    <div className="rounded-xl border border-[#d6e2de] bg-white p-5">
       <div className="flex items-center gap-3 mb-4">
         <Code size={20} className={color} />
-        <span className="font-bold text-white">Connect {name}</span>
+        <span className="font-bold text-[#18292c]">Connect {name}</span>
       </div>
 
       {!verified ? (
@@ -121,10 +121,10 @@ export default function PlatformCard({
               placeholder={`${name} Username`}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm focus:border-blue-500 outline-none"
+              className="w-full rounded-lg border border-[#cfdcd8] bg-white px-4 py-2 text-sm text-[#18292c] outline-none focus:border-teal-600"
             />
             {error && (
-              <div className="mt-2 flex items-center gap-1 text-red-400 text-xs">
+              <div className="mt-2 flex items-center gap-1 text-xs text-red-600">
                 <AlertCircle size={12} /> {error}
               </div>
             )}
@@ -132,25 +132,25 @@ export default function PlatformCard({
           <button
             onClick={verify}
             disabled={loading || !username}
-            className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-medium disabled:opacity-50"
+            className="rounded-lg bg-[#e7efec] px-4 py-2 text-sm font-medium text-[#233337] transition-colors hover:bg-[#dce9e4] disabled:opacity-50"
           >
             {loading ? <Loader2 className="animate-spin" size={16} /> : 'Verify'}
           </button>
         </div>
       ) : (
-        <div className="bg-slate-950 rounded-lg p-4 border border-slate-700">
+        <div className="rounded-lg border border-[#d5e2de] bg-[#f7fbfa] p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <User size={16} />
-              <span className="font-bold">{verified.username}</span>
+              <span className="font-bold text-[#18292c]">{verified.username}</span>
             </div>
-            <CheckCircle className="text-green-500" size={16} />
+            <CheckCircle className="text-green-600" size={16} />
           </div>
           <div className="flex gap-2">
-            <button onClick={confirmLink} className="flex-1 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium">
+            <button onClick={confirmLink} className="flex-1 rounded-lg bg-teal-700 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600">
               Link Account
             </button>
-            <button onClick={() => setVerified(null)} className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm">
+            <button onClick={() => setVerified(null)} className="rounded-lg border border-[#cddbd7] px-4 py-2 text-sm text-[#274245] hover:bg-[#ecf3f1]">
               Cancel
             </button>
           </div>

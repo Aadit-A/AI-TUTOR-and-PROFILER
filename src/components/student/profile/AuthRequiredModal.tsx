@@ -13,19 +13,19 @@ export default function AuthRequiredModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl">
-        <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-700">
-          <Lock size={32} className="text-blue-400" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#18373a]/30 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-2xl border border-[#d6e2de] bg-white p-8 text-center shadow-2xl">
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-[#d5e3df] bg-[#eff5f3]">
+          <Lock size={32} className="text-teal-700" />
         </div>
-        <h2 className="text-2xl font-bold text-white mb-2">Access Restricted</h2>
-        <p className="text-slate-400 mb-8">
+        <h2 className="mb-2 text-2xl font-bold text-[#18292c]">Access Restricted</h2>
+        <p className="mb-8 text-[#5a7275]">
           To access AI Tutor features and track your progress, sign in with your Google account.
         </p>
         <button
           onClick={handleAuth}
           disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-teal-700 px-4 py-3 font-semibold text-white transition-colors hover:bg-teal-600"
         >
           {loading ? <Loader2 className="animate-spin" /> : <span>Sign In with Google</span>}
         </button>

@@ -4,7 +4,7 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password?: string;
-  role: 'student' | 'company' | 'admin';
+  role: 'student' | 'admin';
   leetcode?: string;
   googleId?: string;
   createdAt: Date;
@@ -14,7 +14,7 @@ const UserSchema: Schema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String }, // Optional for Google Auth, but used for Credentials
-  role: { type: String, enum: ['student', 'company', 'admin'], default: 'student' },
+  role: { type: String, enum: ['student', 'admin'], default: 'student' },
   leetcode: { type: String },
   googleId: { type: String },
   createdAt: { type: Date, default: Date.now }

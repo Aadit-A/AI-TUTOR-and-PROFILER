@@ -6,13 +6,13 @@ declare module "next-auth" {
    */
   interface Session {
     leetcode?: string
-    role?: string
+    role?: 'student' | 'admin'
     googleId?: string
     user: {
       /** The user's postal address. */
       address?: string
       id?: string
-      role?: string
+      role?: 'student' | 'admin'
       leetcode?: string
       googleId?: string
       hasPassword?: boolean
@@ -24,7 +24,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     id?: string
     leetcode?: string
-    role?: string
+    role?: 'student' | 'admin'
     googleId?: string
     hasPassword?: boolean
   }
