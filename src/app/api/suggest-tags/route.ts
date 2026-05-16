@@ -97,7 +97,7 @@ export async function POST(req: Request) {
     console.log("Database Tags:", dbTags);
 
     // ---------------------------------------------------
-    // FETCH PROBLEMS
+    // FETCH PROBLEMSs
     // ---------------------------------------------------
 
     const problems = await Problem.find({
