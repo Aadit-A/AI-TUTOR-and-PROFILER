@@ -171,7 +171,7 @@ export default function ResumeAnalyzerPage() {
                     Professional Summary
                   </h3>
                   <p className="text-[#5a7275] leading-relaxed italic">
-                    "{analysis.summary}"
+                    &quot;{analysis.summary}&quot;
                   </p>
                 </div>
 
