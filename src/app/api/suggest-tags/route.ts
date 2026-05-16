@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 
-import { suggestTags } from "@/lib/tagSuggest";
-
 import Problem from "@/models/Problem";
 
 import dbConnect from "@/lib/db";
@@ -10,34 +8,45 @@ export async function POST(req: Request) {
 
   try {
 
-    // ---------------------------------------------------
-    // CONNECT DATABASE
-    // ---------------------------------------------------
-
     await dbConnect();
-
-    // ---------------------------------------------------
-    // GET USER QUERY
-    // ---------------------------------------------------
 
     const body = await req.json();
 
     const query = body.query;
 
-    // ---------------------------------------------------
-    // PREDICT TAGS USING ML MODEL
-    // ---------------------------------------------------
+    // --------------------------------------------
+    // CALL PYTHON API
+    // --------------------------------------------
 
-    const tags = await suggestTags(query);
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      "http://localhost:3000";
 
-    console.log("Predicted Tags:", tags);
+    const mlResponse = await fetch(
+      `${baseUrl}/api/predict`,
+      {
+        method: "POST",
 
-    // ---------------------------------------------------
-    // MAP ML TAGS -> DATABASE TAGS
-    // ---------------------------------------------------
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          query
+        })
+      }
+    );
+
+    const mlData = await mlResponse.json();
+
+    const tags = mlData.tags || [];
+
+    // --------------------------------------------
+    // TAG MAP
+    // --------------------------------------------
 
     const tagMap: Record<string, string> = {
-
+      
       array: "Array",
 
       graph: "Graph",
@@ -77,66 +86,26 @@ export async function POST(req: Request) {
       tag => tagMap[tag] || tag
     );
 
-    console.log("Database Tags:", dbTags);
-
-    // ---------------------------------------------------
-    // FETCH MATCHING PROBLEMS
-    // ---------------------------------------------------
+    // --------------------------------------------
+    // FETCH PROBLEMS
+    // --------------------------------------------
 
     const problems = await Problem.find({
-      relatedTopics: { $in: dbTags }
-    }).limit(10);
-
-    console.log("Problems Found:", problems.length);
-
-    // ---------------------------------------------------
-    // OPTIONAL RANKING
-    // MORE MATCHING TAGS = HIGHER SCORE
-    // ---------------------------------------------------
-
-    const rankedProblems = problems.map((problem: any) => {
-
-      let score = 0;
-
-      for (const tag of dbTags) {
-
-        if (problem.relatedTopics.includes(tag)) {
-          score++;
-        }
+      relatedTopics: {
+        $in: dbTags
       }
-
-      return {
-        ...problem.toObject(),
-        score
-      };
-    });
-
-    rankedProblems.sort(
-      (a, b) => b.score - a.score
-    );
-
-    // ---------------------------------------------------
-    // RESPONSE
-    // ---------------------------------------------------
+    }).limit(10);
 
     return NextResponse.json({
 
       success: true,
 
-      query,
-
       predictedTags: tags,
 
-      databaseTags: dbTags,
-
-      totalProblems: rankedProblems.length,
-
-      problems: rankedProblems
+      problems
     });
 
   } catch (err: any) {
-
-    console.error("API ERROR:");
 
     console.error(err);
 
