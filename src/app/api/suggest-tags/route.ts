@@ -8,22 +8,28 @@ export async function POST(req: Request) {
 
   try {
 
+    // ---------------------------------------------------
+    // CONNECT DB
+    // ---------------------------------------------------
+
     await dbConnect();
+
+    // ---------------------------------------------------
+    // GET USER QUERY
+    // ---------------------------------------------------
 
     const body = await req.json();
 
     const query = body.query;
 
-    // --------------------------------------------
-    // CALL PYTHON API
-    // --------------------------------------------
+    // ---------------------------------------------------
+    // CALL FASTAPI ML BACKEND
+    // ---------------------------------------------------
 
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL ||
-      "http://localhost:3000";
+    const response = await fetch(
 
-    const mlResponse = await fetch(
-      `${baseUrl}/api/predict`,
+      `${process.env.ML_BACKEND_URL}/predict`,
+
       {
         method: "POST",
 
@@ -37,16 +43,18 @@ export async function POST(req: Request) {
       }
     );
 
-    const mlData = await mlResponse.json();
+    const mlData = await response.json();
 
     const tags = mlData.tags || [];
 
-    // --------------------------------------------
-    // TAG MAP
-    // --------------------------------------------
+    console.log("Predicted Tags:", tags);
+
+    // ---------------------------------------------------
+    // MAP ML TAGS -> DB TAGS
+    // ---------------------------------------------------
 
     const tagMap: Record<string, string> = {
-      
+
       array: "Array",
 
       graph: "Graph",
@@ -86,15 +94,48 @@ export async function POST(req: Request) {
       tag => tagMap[tag] || tag
     );
 
-    // --------------------------------------------
+    console.log("Database Tags:", dbTags);
+
+    // ---------------------------------------------------
     // FETCH PROBLEMS
-    // --------------------------------------------
+    // ---------------------------------------------------
 
     const problems = await Problem.find({
+
       relatedTopics: {
         $in: dbTags
       }
+
     }).limit(10);
+
+    // ---------------------------------------------------
+    // RANK PROBLEMS
+    // ---------------------------------------------------
+
+    const rankedProblems = problems.map((problem: any) => {
+
+      let score = 0;
+
+      for (const tag of dbTags) {
+
+        if (problem.relatedTopics.includes(tag)) {
+          score++;
+        }
+      }
+
+      return {
+        ...problem.toObject(),
+        score
+      };
+    });
+
+    rankedProblems.sort(
+      (a, b) => b.score - a.score
+    );
+
+    // ---------------------------------------------------
+    // RETURN RESPONSE
+    // ---------------------------------------------------
 
     return NextResponse.json({
 
@@ -102,7 +143,7 @@ export async function POST(req: Request) {
 
       predictedTags: tags,
 
-      problems
+      problems: rankedProblems
     });
 
   } catch (err: any) {
