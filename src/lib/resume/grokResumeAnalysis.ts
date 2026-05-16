@@ -41,6 +41,10 @@ export async function analyzeResumeWithGrok(text: string): Promise<ResumeAnalysi
     }
 
     Return ONLY the JSON object. Do not include any other text.
+    Give the atsScore as a number between 0 and 100, where 100 means the resume is perfectly optimized for ATS systems.
+    If it seems like the resume is missing key information or is poorly formatted, give it a lower score. If it is well-structured and contains relevant keywords, give it a higher score.
+    If the format seems like it might be a scanned PDF with little extractable text, give it a very low score and mention in the summary that the resume may be unreadable by ATS systems.
+    If the resume does not feel like resume but more like a cover letter or something else, give it a low score and mention that in the summary as well.
   `;
 
   try {
