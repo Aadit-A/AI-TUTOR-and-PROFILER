@@ -1,62 +1,76 @@
-# AI Tutor
+# AI-TUTOR & PROFILER
 
-An AI-powered learning and skill profiling system.
+A sophisticated AI-powered learning platform designed to help students master coding through personalized problem recommendations, real-time AI tutoring, and comprehensive skill profiling.
 
-## Features
+## 🚀 Key Features
 
-- **Student Side**: Code practice with AI analysis, guided teaching, and dynamic skill profiling
+### 👨‍🎓 Student Experience
+- **Smart AI Tutor**: Real-time coding assistance powered by **Groq (Llama 3.3)**. Get hints, explanations, or code reviews instantly.
+- **Natural Language Recommendations**: Search for problems using plain English (e.g., "recursive binary tree problems") powered by a custom **Machine Learning** tagging system.
+- **Integrated Practice Lab**: A full-featured IDE with C++ support, automated execution via **Judge0**, and integrated AI chat.
+- **LeetCode Integration**: Link your LeetCode account to sync statistics and track your progress across platforms.
+- **Skill Profiling**: Dynamic dashboard visualization of your performance across different difficulties and topics.
 
-## Getting Started
+## 🛠️ Tech Stack
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+- **Frontend**: Next.js 14/15 (App Router), TypeScript, Tailwind CSS, Framer Motion
+- **Backend**: Next.js API Routes, NextAuth.js
+- **Database**: MongoDB (via Mongoose)
+- **AI/ML**: Groq API (LLM), Python (Scikit-learn/Joblib for Tag Suggestions)
+- **Code Execution**: Judge0 API
+- **Icons**: Lucide React
 
-2. Run the development server:
-   ```bash
-   npm run dev
-   ```
+## 🏁 Getting Started
 
-3. Configure Ollama (required for AI tutor responses):
-   ```bash
-   ollama serve
-   ollama pull qwen3.5
-   ```
+### 1. Prerequisites
+- Node.js 18+
+- Python 3.8+ (for ML features)
+- MongoDB account (local or Atlas)
 
-   Add these variables in `.env.local`:
-   ```env
-   OLLAMA_BASE_URL=http://127.0.0.1:11434
-   OLLAMA_MODEL=qwen3.5
-   ```
+### 2. Configuration
+Create a `.env.local` file in the root directory:
+```env
+# Authentication
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your_random_secret
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+# OAuth
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
 
-## Every Time You Start Development
+# Database
+MONGODB_URI=your_mongodb_connection_string
 
-1. Start Ollama in one terminal:
-   ```bash
-   ollama serve
-   ```
-2. Start the app in a second terminal:
-   ```bash
-   npm run dev
-   ```
-3. If AI answers fail, verify Ollama is running on `http://127.0.0.1:11434` and the model exists:
-   ```bash
-   ollama list
-   ollama pull qwen3.5
-   ```
+# AI / Groq
+GROQ_API_KEY=your_groq_api_key
+GROQ_MODEL=llama-3.3-70b-versatile
 
-## Project Structure
+# Optional: Code Execution
+JUDGE0_BASE_URL=https://ce.judge0.com
+```
 
-- `src/app/` - Next.js app router pages
-- `src/components/` - Reusable UI components
-- `src/lib/` - Utility functions and configurations
+### 3. Installation
+```bash
+# Install Node dependencies
+npm install
 
-## Technologies
+# Install Python dependencies (for ML tagging system)
+pip install joblib scikit-learn
+```
 
-- Next.js 15
-- TypeScript
-- Tailwind CSS
-- ESLint
+### 4. Run Development
+```bash
+npm run dev
+```
+Navigate to [http://localhost:3000](http://localhost:3000) to see the app.
+
+## 📁 Project Structure
+
+- `src/app/` - Next.js App Router (Pages & API Routes)
+- `src/components/` - Reusable UI components & Sidebar
+- `src/lib/` - Auth, DB configuration, and ML logic
+- `src/models/` - Mongoose Schemas (User, Problem)
+- `src/types/` - TypeScript definitions
+
+---
+Developed with ❤️ by the AI-TUTOR Team.
