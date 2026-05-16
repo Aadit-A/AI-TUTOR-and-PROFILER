@@ -1,5 +1,5 @@
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+const GROQ_MODEL = process.env.GROQ_MODEL;
 
 export interface ResumeAnalysis {
   name: string;
@@ -51,7 +51,7 @@ export async function analyzeResumeWithGrok(text: string): Promise<ResumeAnalysi
         'Authorization': `Bearer ${GROQ_API_KEY}`,
       },
       body: JSON.stringify({
-        model: GROQ_MODEL,
+        model: "llama-3.3-70b-versatile",
         messages: [
           {
             role: 'system',

@@ -31,13 +31,14 @@ export async function extractTextFromPDF(
                     let extractedText = "";
 
                     for (const page of pdfData.Pages) {
-
                         for (const text of page.Texts) {
-
                             for (const run of text.R) {
-
-                                extractedText +=
-                                    decodeURIComponent(run.T) + " ";
+                                try {
+                                    extractedText += decodeURIComponent(run.T) + " ";
+                                } catch (e) {
+                                    // Fallback if decodeURIComponent fails (e.g. malformed %)
+                                    extractedText += run.T + " ";
+                                }
                             }
                         }
                     }
