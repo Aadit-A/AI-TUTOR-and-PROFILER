@@ -2,9 +2,9 @@
 
 import Link from 'next/link'
 import { signOut } from 'next-auth/react'
-import { Activity, Code, List, LogOut, Settings, type LucideIcon } from 'lucide-react'
+import { Activity, Code, List, LogOut, Settings, FileSearch, type LucideIcon } from 'lucide-react'
 
-type ActiveTab = 'overview' | 'problems' | 'practice' | 'settings'
+type ActiveTab = 'overview' | 'problems' | 'practice' | 'resume' | 'settings'
 
 type NavItem = {
   key: ActiveTab
@@ -17,6 +17,7 @@ const navItems: NavItem[] = [
   { key: 'overview', href: '/student/dashboard', label: 'Overview', icon: Activity },
   { key: 'problems', href: '/student/problems', label: 'Problems', icon: List },
   { key: 'practice', href: '/student/practice', label: 'Practice Lab', icon: Code },
+  { key: 'resume', href: '/student/resume', label: 'Resume Analyzer', icon: FileSearch },
   { key: 'settings', href: '/student/profile', label: 'Settings', icon: Settings },
 ]
 
