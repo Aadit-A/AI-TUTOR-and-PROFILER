@@ -64,13 +64,40 @@ npm run dev
 ```
 Navigate to [http://localhost:3000](http://localhost:3000) to see the app.
 
+## 🌍 Deployment
+
+### Frontend (Vercel)
+The easiest way to deploy the Next.js frontend is using [Vercel](https://vercel.com):
+1. Create a Vercel account and connect your GitHub repository.
+2. Select the repository and set the Root Directory to the project root (leave empty if it's the root).
+3. Ensure the Framework Preset is set to **Next.js**.
+4. Add all the required **Environment Variables** (copy from your `.env.local`). Make sure to set `NEXTAUTH_URL` to your production domain (e.g., `https://your-app.vercel.app`).
+5. Click **Deploy**. Vercel will install dependencies and host your application.
+
+### Backend (Render)
+The machine learning feature backend is powered by FastAPI and is pre-configured to deploy seamlessly on [Render](https://render.com):
+1. Log into Render, click **New +** and select **Web Service**.
+2. Connect the GitHub repository.
+3. Apply the following settings:
+   - **Root Directory**: `ml-backend`
+   - **Environment**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+4. Render will automatically detect the Python version from `ml-backend/runtime.txt`.
+5. Click **Create Web Service**.
+6. **Important:** After deployment, grab your Render URL (e.g., `https://ai-tutor-backend.onrender.com`) and ensure your Next.js application (on Vercel) is communicating with it where the ML predictions are made.
+
 ## 📁 Project Structure
 
-- `src/app/` - Next.js App Router (Pages & API Routes)
-- `src/components/` - Reusable UI components & Sidebar
-- `src/lib/` - Auth, DB configuration, and ML logic
-- `src/models/` - Mongoose Schemas (User, Problem)
-- `src/types/` - TypeScript definitions
+- `ml-backend/` - FastAPI Python backend (Contains ML models and FastAPI routing)
+  - `ml/` - Saved ML models/vectorizers (joblib files)
+  - `main.py` - FastAPI application entry point
+- `src/app/` - Next.js App Router (Frontend pages & API routes)
+  - `api/` - Next.js backend endpoints (NextAuth, Judge0, AI, ML integration)
+- `src/components/` - Reusable React components (UI & Providers)
+- `src/lib/` - Auth configurations, database connections, and helper functions
+- `src/models/` - Mongoose database schemas (User, Problem, TestCase)
+- `src/types/` - TypeScript interface definitions
 
 ---
 Developed with ❤️ by the AI-TUTOR Team.
