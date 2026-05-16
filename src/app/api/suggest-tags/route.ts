@@ -91,7 +91,7 @@ export async function POST(req: Request) {
     };
 
     const dbTags = tags.map(
-      tag => tagMap[tag] || tag
+      (tag: string) => tagMap[tag] || tag
     );
 
     console.log("Database Tags:", dbTags);
