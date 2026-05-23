@@ -45,6 +45,9 @@ export async function analyzeResumeWithGrok(text: string): Promise<ResumeAnalysi
     If it seems like the resume is missing key information or is poorly formatted, give it a lower score. If it is well-structured and contains relevant keywords, give it a higher score.
     If the format seems like it might be a scanned PDF with little extractable text, give it a very low score and mention in the summary that the resume may be unreadable by ATS systems.
     If the resume does not feel like resume but more like a cover letter or something else, give it a low score and mention that in the summary as well.
+    Give suggestion on what dsa topics or interview topics the candidate should study based on the content of the resume and the skills they have or are missing.
+    Do not hesitate to give a low score if the resume is not up to par, and be honest in the analysis. The goal is to provide actionable feedback to help the candidate improve their resume and interview preparation.
+    Make it hard to score high in the resume analysis. Only well-optimized resumes with strong content should get scores above 80. Many resumes will likely score in the 40-70 range, and some may be below 40 if they are missing key information or are poorly formatted.
   `;
 
   try {
